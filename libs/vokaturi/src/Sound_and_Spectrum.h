@@ -3,8 +3,8 @@
 /*
  * Sound_and_Spectrum.h
  *
- * Copyright (C) 2016 Paul Boersma, Johnny Ip, Toni Gojani
- * version 2016-12-27
+ * Copyright (C) 2016,2017 Paul Boersma, Johnny Ip, Toni Gojani
+ * version 2017-01-21
  *
  * This code is part of OpenVokaturi.
  *
@@ -25,20 +25,20 @@
 #include "Sound.h"
 #include "Spectrum.h"
 
-static void Sound_into_Spectrum (Sound *me, Spectrum *thee) {
+inline static void Sound_into_Spectrum (Sound *me, Spectrum *you) {
 	for (int isamp = 0; isamp < my length; isamp ++) {
-		thy samples [isamp] = my samples [isamp];
+		your samples [isamp] = my samples [isamp];
 	}
-	for (int isamp = my length; isamp < thy length; isamp ++) {
-		thy samples [isamp] = 0.0;
+	for (int isamp = my length; isamp < your length; isamp ++) {
+		your samples [isamp] = 0.0;
 	}
-	drftf1 (thy length, thy samples, thy smallCache, thy bigCache, thy splitCache);
+	drftf1 (your length, your samples, your smallCache, your bigCache, your splitCache);
 }
 
-static void Spectrum_into_Sound (Spectrum *me, Sound *thee) {
+inline static void Spectrum_into_Sound (Spectrum *me, Sound *you) {
 	drftb1 (my length, my samples, my smallCache, my bigCache, my splitCache);
-	for (int isamp = 0; isamp < thy length; isamp ++) {
-		thy samples [isamp] = my samples [isamp];
+	for (int isamp = 0; isamp < your length; isamp ++) {
+		your samples [isamp] = my samples [isamp];
 	}
 }
 

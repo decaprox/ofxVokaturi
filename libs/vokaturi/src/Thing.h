@@ -3,8 +3,8 @@
 /*
  * Thing.h
  *
- * Copyright (C) 2016 Paul Boersma, Johnny Ip, Toni Gojani
- * version 2016-12-27
+ * Copyright (C) 2016,2017 Paul Boersma, Johnny Ip, Toni Gojani
+ * version 2016-01-21
  *
  * This code is part of OpenVokaturi.
  *
@@ -28,11 +28,11 @@
 #include <math.h>
 
 /*
-	The use of the macros "my" and "thy" is Praat style (www.praat.org).
+	The use of the macros "my" and "your" is Praat style (www.praat.org).
 	They can shorten the code appreciably.
 */
 #define my  me ->
-#define thy  thee ->
+#define your  you ->
 
 #define strequ  ! strcmp
 #define strnequ  ! strncmp

@@ -1,5 +1,17 @@
 READ_ME.TXT
 
+- OpenVokaturi version 2.1b, 2017-01-31:
+The example software `WavFile.h`, as well as `MeasureWav_win64.exe`,
+now recognizes more types of WAV files.
+
+- OpenVokaturi version 2.1a, 2017-01-25:
+The example files `measure_wav_win64.py` and the like in the SDK were corrected
+so as to be similar to the example file that you can read on the website.
+The incorrect example files would report zero emotion probabilities
+because they did not test for "quality".
+
+- OpenVokaturi version 2.1, 2017-01-16.
+
 - OpenVokaturi version 2.0, 2017-01-02:
 We increased the number of cues from 5 to 9;
 this raised the quality by approximately 5 percent.

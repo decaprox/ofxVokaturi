@@ -3,8 +3,8 @@
 /*
  * Spectrum.h
  *
- * Copyright (C) 2016 Paul Boersma, Johnny Ip, Toni Gojani
- * version 2016-12-28
+ * Copyright (C) 2016,2017 Paul Boersma, Johnny Ip, Toni Gojani
+ * version 2017-01-21
  *
  * This code is part of OpenVokaturi.
  *
@@ -66,7 +66,7 @@ typedef struct {
 	bool valid;
 } Spectrum;
 
-static void Spectrum_initWithLengthAndFrequencyStep (Spectrum *me, int length, double frequencyStepInHertz) {
+inline static void Spectrum_initWithLengthAndFrequencyStep (Spectrum *me, int length, double frequencyStepInHertz) {
 	my valid = false;
 	my samples = (double *) calloc (length, sizeof * my samples);
 	if (my samples == NULL) {
@@ -91,11 +91,11 @@ static void Spectrum_initWithLengthAndFrequencyStep (Spectrum *me, int length, d
 	my valid = true;
 }
 
-static bool Spectrum_isValid (Spectrum *me) {
+inline static bool Spectrum_isValid (Spectrum *me) {
 	return my valid;
 }
 
-static void Spectrum_destroy (Spectrum *me) {
+inline static void Spectrum_destroy (Spectrum *me) {
 	if (my samples) {
 		free (my samples);
 		my samples = NULL;
@@ -111,7 +111,7 @@ static void Spectrum_destroy (Spectrum *me) {
 	my valid = false;
 }
 
-static void Spectrum_square (Spectrum *me) {
+inline static void Spectrum_square (Spectrum *me) {
 	double re = my samples [0];
 	double im = 0.0;
 	my samples [0] = re * re + im * im;
@@ -126,7 +126,7 @@ static void Spectrum_square (Spectrum *me) {
 	my samples [my length - 1] = re * re + im * im;
 }
 
-static double Spectrum_computeBandEnergyDensity (Spectrum *me, double fmin, double fmax) {
+inline static double Spectrum_computeBandEnergyDensity (Spectrum *me, double fmin, double fmax) {
 	double energy = 0.0;
 	int numberOfEnergiesAdded = 0;
 	int imin = (int) ceil (fmin / my frequencyStepInHertz);

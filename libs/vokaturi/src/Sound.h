@@ -3,8 +3,8 @@
 /*
  * Sound.h
  *
- * Copyright (C) 2016 Paul Boersma, Johnny Ip, Toni Gojani
- * version 2016-12-28
+ * Copyright (C) 2016,2017 Paul Boersma, Johnny Ip, Toni Gojani
+ * version 2017-01-21
  *
  * This code is part of OpenVokaturi.
  *
@@ -42,7 +42,7 @@ typedef struct {
 	double samplingFrequencyInHertz;
 } Sound;
 
-static void Sound_initWithLengthAndSamplingFrequency (Sound *me, int length, double samplingFrequencyInHertz) {
+inline static void Sound_initWithLengthAndSamplingFrequency (Sound *me, int length, double samplingFrequencyInHertz) {
 	my samples = (double *) calloc (length, sizeof * my samples);
 	if (my samples == NULL) {
 		return;
@@ -51,18 +51,33 @@ static void Sound_initWithLengthAndSamplingFrequency (Sound *me, int length, dou
 	my samplingFrequencyInHertz = samplingFrequencyInHertz;
 }
 
-static bool Sound_isValid (Sound *me) {
+inline static bool Sound_isValid (Sound *me) {
 	return my samples != NULL;
 }
 
-static void Sound_destroy (Sound *me) {
+inline static void Sound_initAsSweep (Sound *me, double duration, double samplingFrequency, double endFrequency) {
+	Sound_initWithLengthAndSamplingFrequency (me, duration * samplingFrequency, samplingFrequency);
+	if (! Sound_isValid (me)) return;
+	const double samplingPeriod = 1.0 / samplingFrequency;
+	double phase = 0.0;
+	for (int isamp = 0; isamp < my length; isamp ++) {
+		const double time = (double) isamp / samplingFrequency;
+		const double fractionThrough = time / duration;
+		const double localFrequency = fractionThrough * endFrequency;
+		const double dphase = 2.0 * M_PI * localFrequency * samplingPeriod;
+		phase += dphase;
+		my samples [isamp] = 0.9 * sin (phase);
+	}
+}
+
+inline static void Sound_destroy (Sound *me) {
 	if (my samples) {
 		free (my samples);
 		my samples = NULL;
 	}
 }
 
-static void Sound_fillWithNuttallWindow (Sound *me) {
+inline static void Sound_fillWithNuttallWindow (Sound *me) {
 	const double a0 = 0.355768, a1 = -0.487396, a2 = 0.144232, a3 = -0.012604;
 	const double fac1 = 2 * M_PI / (my length - 1), fac2 = 2.0 * fac1, fac3 = 3.0 * fac1;
 	for (int isamp = 0; isamp < my length; isamp ++) {
@@ -72,7 +87,7 @@ static void Sound_fillWithNuttallWindow (Sound *me) {
 	}
 }
 
-static double Sound_getSum (Sound *me) {
+inline static double Sound_getSum (Sound *me) {
 	double sum = 0.0;
 	for (int isamp = 0; isamp < my length; isamp ++) {
 		sum += my samples [isamp];
@@ -80,7 +95,7 @@ static double Sound_getSum (Sound *me) {
 	return sum;
 }
 
-static double Sound_getSumOfSquares (Sound *me) {
+inline static double Sound_getSumOfSquares (Sound *me) {
 	double sumOfSquares = 0.0;
 	for (int isamp = 0; isamp < my length; isamp ++) {
 		sumOfSquares += my samples [isamp] * my samples [isamp];
@@ -88,42 +103,42 @@ static double Sound_getSumOfSquares (Sound *me) {
 	return sumOfSquares;
 }
 
-static double Sound_getMean (Sound *me) {
+inline static double Sound_getMean (Sound *me) {
 	double sum = Sound_getSum (me);
 	return sum / my length;
 }
 
-static void Sound_addConstant (Sound *me, double constant) {
+inline static void Sound_addConstant (Sound *me, double constant) {
 	for (int isamp = 0; isamp < my length; isamp ++) {
 		my samples [isamp] += constant;
 	}
 }
 
-static void Sound_subtractMean (Sound *me) {
+inline static void Sound_subtractMean (Sound *me) {
 	double mean = Sound_getMean (me);
 	Sound_addConstant (me, - mean);
 }
 
 /**
-	@pre   thy length >= my length
+	@pre   your length >= my length
 */
-static void Sound_multiplyByOtherSound (Sound *me, Sound *thee) {
+inline static void Sound_multiplyByOtherSound (Sound *me, Sound *you) {
 	for (int isamp = 0; isamp < my length; isamp ++) {
-		my samples [isamp] *= thy samples [isamp];
+		my samples [isamp] *= your samples [isamp];
 	}
 }
 
 /**
-	@pre   thy length >= my length
-	@pre   thy samples [1..my length] != 0.0
+	@pre   your length >= my length
+	@pre   your samples [1..my length] != 0.0
 */
-static void Sound_divideByOtherSound (Sound *me, Sound *thee) {
+inline static void Sound_divideByOtherSound (Sound *me, Sound *you) {
 	for (int isamp = 0; isamp < my length; isamp ++) {
-		my samples [isamp] /= thy samples [isamp];
+		my samples [isamp] /= your samples [isamp];
 	}
 }
 
-static int Sound_getBestSpectrumLength (Sound *me) {
+inline static int Sound_getBestSpectrumLength (Sound *me) {
 	int bestSpectrumLength = 2;
 	while (bestSpectrumLength < my length)
 		bestSpectrumLength *= 2;

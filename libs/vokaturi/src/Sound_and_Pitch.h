@@ -3,8 +3,8 @@
 /*
  * Sound_and_Pitch.h
  *
- * Copyright (C) 2016 Paul Boersma, Johnny Ip, Toni Gojani
- * version 2016-12-27
+ * Copyright (C) 2016,2017 Paul Boersma, Johnny Ip, Toni Gojani
+ * version 2017-01-21
  *
  * This code is part of OpenVokaturi.
  *
@@ -25,7 +25,7 @@
 #include "Sound.h"
 #include "Pitch.h"
 
-static void Sound_autocorrelation_into_Pitch (Sound *me, Pitch *thee, double fmin, double fmax) {
+inline static void Sound_autocorrelation_into_Pitch (Sound *me, Pitch *you, double fmin, double fmax) {
 	double dt = 1.0 / my samplingFrequencyInHertz;
 	int imin = (int) ceil (1.0 / (fmax * dt));
 	int imax = (int) floor (1.0 / (fmin * dt));
@@ -62,12 +62,12 @@ static void Sound_autocorrelation_into_Pitch (Sound *me, Pitch *thee, double fmi
 		}
 	}
 	if (bestLag_samples == 0.0) {
-		thy f0InHertz = 0.0;   // there used to be a nan(0) here, but that can crash on some platforms
-		thy strength = 0.0;
+		your f0InHertz = 0.0;   // this signals failure
+		your strength = 0.0;
 	} else {
 		double bestLag_seconds = dt * bestLag_samples;
-		thy f0InHertz = 1.0 / bestLag_seconds;
-		thy strength = maximum;
+		your f0InHertz = 1.0 / bestLag_seconds;
+		your strength = maximum;
 	}
 }
 

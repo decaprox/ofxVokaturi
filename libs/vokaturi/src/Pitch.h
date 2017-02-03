@@ -3,8 +3,8 @@
 /*
  * Pitch.h
  *
- * Copyright (C) 2016 Paul Boersma, Johnny Ip, Toni Gojani
- * version 2016-12-27
+ * Copyright (C) 2016,2017 Paul Boersma, Johnny Ip, Toni Gojani
+ * version 2017-01-21
  *
  * This code is part of OpenVokaturi.
  *
@@ -36,6 +36,10 @@ inline static double Pitch_getValueInSemitonesRe100Hz (Pitch *me) {
 	const double pitch_semitonesRelativeToReference =
 		pitch_octavesRelativeToReference * numberOfSemitonesPerOctave;
 	return pitch_semitonesRelativeToReference;
+}
+
+inline static bool Pitch_isValid (Pitch *me) {
+	return my f0InHertz > 0.0;
 }
 
 /* End of file Pitch.h */

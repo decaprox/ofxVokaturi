@@ -2,7 +2,7 @@
 #define _WavFile_h_
 /*
 	WavFile.h
-	public-domain sample code by Vokaturi, 2017-01-16
+	public-domain sample code by Vokaturi, 2017-01-30
 
 	Code that attempts to open a simplistic mono or stereo 16-bit PCM WAV file
 	for use with the sample code that comes with the Vokaturi software.
@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 #include "Vokaturi.h"
 #define my  me ->
 
@@ -128,7 +129,7 @@ inline static void VokaturiWavFile_open (const char *fileName, VokaturiWavFile *
 
 	if (! strncmp (header + 36, "data", 4)) {
 		my sampleOffset = 44;
-	} else if (! strncmp (header + 36, "PAD ", 4)) {
+	} else if (! strncmp (header + 36, "PAD ", 4) || ! strncmp (header + 36, "fact", 4)) {
 		unsigned int padChunkSize =
 			(unsigned char) header [40] |
 			((unsigned char) header [41]) << 8 |
@@ -149,7 +150,8 @@ inline static void VokaturiWavFile_open (const char *fileName, VokaturiWavFile *
 			return;
 		}
 	} else {
-		fprintf (stderr, "VokaturiWavFile error: %s contains un unrecognized chunk.\n", fileName);
+		fprintf (stderr, "VokaturiWavFile error: %s contains un unrecognized \"%c%c%c%c\" chunk.\n", fileName,
+			header [36], header [37], header [38], header [39]);
 		fclose (my f);
 		my f = NULL;
 		return;
